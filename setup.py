@@ -28,8 +28,9 @@ setup(
     version=__version__,
     author='Vladimir Starostin',
     author_email='vladimir.starostin@uni-tuebingen.de',
-    description='A packaging tool for storing and exchanging matplotlib figures with data & code binded in a file. '
-                'Integrated with Jupyter Notebook.',
+    description='A packaging tool for storing and exchanging data & code bound'
+                ' in a single file. Main focus on supporting matplotlib package'
+                ' for exchanging scientific figures. Integrated with Jupyter Notebook.',
     license='MIT',
     python_requires='>=3.7.2',
     install_requires=install_requires
