@@ -24,6 +24,19 @@ from .functions_with_complex_assign import (
     FUNC_WITH_COMPLEX_ASSIGN
 )
 
+from .function_with_recursion import (
+    func_with_recursion,
+    func_with_recursion_2,
+    FUNC_WITH_RECURSION_DICT,
+    FUNC_WITH_RECURSION_2_DICT
+)
+
+from .plt_project import (
+    func_with_plt_project1,
+    func_with_plt_project2,
+    plt_project,
+)
+
 
 @pytest.fixture(
     params=[
@@ -33,6 +46,8 @@ from .functions_with_complex_assign import (
         (func_with_dependency_in_args, FUNC_WITH_DEPENDENCY_IN_ARGS),
         (func_with_many_subfunctions, FUNC_WITH_MANY_SUBFUNCTIONS_DICT),
         (func_with_complex_assign, FUNC_WITH_COMPLEX_ASSIGN),
+        (func_with_recursion, FUNC_WITH_RECURSION_DICT),
+        (func_with_recursion_2, FUNC_WITH_RECURSION_2_DICT),
     ],
     ids=[
         'func_with_import1',
@@ -41,6 +56,8 @@ from .functions_with_complex_assign import (
         'func_with_dependency_in_args',
         'func_with_many_subfunctions',
         'functions_with_complex_assign',
+        'func_with_recursion',
+        'func_with_recursion_2',
     ]
 )
 def functions_with_func_dicts(request):

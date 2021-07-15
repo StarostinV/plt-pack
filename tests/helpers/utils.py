@@ -1,5 +1,17 @@
 import numpy as np
 from plt_pack.parse import FuncDict
+from plt_pack import PltProject
+
+
+def check_auto_save(
+        plt_project: PltProject,
+        func_dict: FuncDict,
+        target_args: tuple = None,
+        target_kwargs: dict = None
+):
+    assert plt_project.list_files()[0] == func_dict.entry_func
+    file = plt_project.load_file(func_dict.entry_func)
+    compare_func_dicts(func_dict, file, target_args, target_kwargs)
 
 
 def compare_func_dicts(
