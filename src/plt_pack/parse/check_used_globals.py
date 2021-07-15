@@ -80,4 +80,7 @@ class CheckUsedGlobals(ast.NodeVisitor):
 
 
 def _get_funcdef_arg_names(node, attr) -> List[str]:
+    arg_list = getattr(node.args, attr, None)
+    if not arg_list:
+        return []
     return list(map(lambda x: x.arg, getattr(node.args, attr)))
