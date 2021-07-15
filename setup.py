@@ -17,13 +17,8 @@ def get_version() -> str:
 
 __version__ = get_version()
 
-install_requires = [
-    'numpy',
-    'msgpack>=1.0.0',
-    'msgpack-numpy>=0.4.7.1',
-    'matplotlib',
-    'packaging',
-]
+with open('requirements.txt') as f:
+    install_requires = f.read().splitlines()
 
 classifiers = [
     'Development Status :: 3 - Alpha',
