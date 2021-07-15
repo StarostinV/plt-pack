@@ -28,6 +28,7 @@ setup(
     version=__version__,
     author='Vladimir Starostin',
     author_email='vladimir.starostin@uni-tuebingen.de',
+    url='https://github.com/StarostinV/plt-pack',
     description='A packaging tool for storing and exchanging data & code bound'
                 ' in a single file. Main focus on supporting matplotlib package'
                 ' for exchanging scientific figures. Integrated with Jupyter Notebook.',
