@@ -1,0 +1,2 @@
+[run]
+omit = src/plt_pack/jupyter_support/*
