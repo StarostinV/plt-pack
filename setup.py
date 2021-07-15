@@ -42,7 +42,7 @@ setup(
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
     license='MIT',
-    python_requires='>=3.7.2',
+    python_requires='>=3.7',
     install_requires=install_requires,
     classifiers=classifiers,
 )
