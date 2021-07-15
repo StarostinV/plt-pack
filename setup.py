@@ -2,6 +2,11 @@ from setuptools import setup, find_packages
 from pathlib import Path
 
 
+def read(filename: str):
+    with open(Path(__file__).parent / filename, mode='r', encoding='utf-8') as f:
+        return f.read()
+
+
 def get_version() -> str:
     local_dict = {}
     with open(str(Path(__file__).parent / 'src' / 'plt_pack' / '__version.py'), 'r') as f:
@@ -38,9 +43,9 @@ setup(
     author='Vladimir Starostin',
     author_email='vladimir.starostin@uni-tuebingen.de',
     url='https://github.com/StarostinV/plt-pack',
-    description='A packaging tool for storing and exchanging data & code bound'
-                ' in a single file. Main focus on supporting matplotlib package'
-                ' for exchanging scientific figures. Integrated with Jupyter Notebook.',
+    description='A packaging tool for storing and exchanging data & code bound in a single file.',
+    long_description=read('README.md'),
+    long_description_content_type='text/markdown',
     license='MIT',
     python_requires='>=3.7.2',
     install_requires=install_requires,
