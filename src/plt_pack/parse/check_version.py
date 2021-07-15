@@ -1,12 +1,11 @@
 import importlib
 from types import ModuleType
 
-
 __all__ = ['check_version']
-
 
 try:
     from importlib.metadata import version  # python 3.8 or above
+
 
     def check_version(module: str or ModuleType) -> str or None:
         if isinstance(module, ModuleType):
@@ -30,6 +29,7 @@ except ImportError:
     from packaging.version import parse as parse_version
     from packaging.version import Version
 
+
     def check_version(module: str or ModuleType) -> str or None:
         if isinstance(module, str):
             module = _str_to_module(module)
@@ -41,7 +41,11 @@ except ImportError:
             version = module.__version__
             if _version_is_valid(version):
                 return version
-        if hasattr(module, '__package__') and module.__package__:
+        if (
+                hasattr(module, '__package__') and
+                module.__package__ and
+                module.__name__ != module.__package__
+        ):
             return check_version(module.__package__)
 
 

@@ -8,6 +8,8 @@ from ..file import save_plt_file, read_plt_file, PltFile
 
 
 class PltProject(object):
+    _TEST: bool = False
+
     def __init__(self, folder: Path or str, datefmt: str = '%d-%b-%H-%M-%S', format: str = 'plt'):
         self.folder = Path(folder)
         self.folder.mkdir(exist_ok=True)
@@ -28,7 +30,8 @@ class PltProject(object):
         def decorator(func):
             @wraps(func)
             def wrapper(*args, **kwargs):
-                func(*args, **kwargs)
+                if not self._TEST:
+                    func(*args, **kwargs)
                 self.save(func, args=args, kwargs=kwargs, func_name=name, rewrite=rewrite)
 
             return wrapper

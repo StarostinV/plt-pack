@@ -1,5 +1,5 @@
 from types import FunctionType
-from typing import Union
+from typing import Union, List
 from io import BytesIO
 from pathlib import Path
 
@@ -12,50 +12,59 @@ from .file_dict import get_file_dict
 __all__ = ['PltFile', 'save_plt_file', 'read_plt_file']
 
 
-class PltFile(object):
-    def __init__(self, func: FunctionType = None, *args, _file_dict: FuncDict = None, **kwargs):
-        self.file_dict: FuncDict
-        if _file_dict:
-            self.file_dict = _file_dict
-        else:
-            self.file_dict = get_file_dict(func, *args, **kwargs)
+class PltFile(FuncDict):
+    def get_code_str(self,
+                     with_imports: bool = True,
+                     with_subfunctions: bool = True,
+                     with_globals: bool = True,
+                     exec_line: bool = False,
+                     ):
+        code: List[str] = []
 
-    def get_code_str(self, with_imports: bool = True, with_subfunctions: bool = True, with_globals: bool = True):
-        code = ''
-
-        entry_func_name = self.file_dict.entry_func
-        entry_func = self.file_dict.functions[entry_func_name]
-        sub_funcs = [func for func_name, func in self.file_dict.functions.items()
+        entry_func_name = self.entry_func
+        entry_func = self.functions[entry_func_name]
+        sub_funcs = [func for func_name, func in self.functions.items()
                      if func_name != entry_func_name]
 
         if with_imports:
-            import_lines = '\n'.join(self.file_dict.import_lines)
-            code += import_lines
-            code += '\n\n'
+            import_lines = '\n'.join(self.import_lines)
+            code.append(import_lines)
 
         if with_globals:
-            global_lines = '\n'.join([f'{k} = {v}' for k, v in self.file_dict.global_vars.items()])
-            code += global_lines
-            code += '\n\n'
+            global_lines = '\n'.join([f'{k} = {v}' for k, v in self.global_vars.items()])
+            code.append(global_lines)
 
-        code += entry_func
+        code.append(entry_func)
 
         if with_subfunctions:
-            code += '\n\n'
-            code += '\n\n'.join(sub_funcs)
+            code += sub_funcs
 
-        return code
+        if exec_line:
+            exec_str = f'\n\n{self.entry_func}(*PltFile_ARGS, **PltFile_KWARGS)'
+            code.append(exec_str)
 
-    @property
-    def used_modules(self):
-        return self.file_dict['modules']
+        return '\n\n'.join(code)
+
+    def exec(self):
+        code = self.get_code_str(exec_line=True)
+
+        global_dict = {
+            'PltFile_ARGS': self.args,
+            'PltFile_KWARGS': self.kwargs,
+        }
+        exec(code, global_dict)
+
+    @classmethod
+    def from_func(cls, func: FunctionType, *args, **kwargs):
+        func_dict = get_file_dict(func, *args, **kwargs)
+        return cls(**func_dict)
 
     @classmethod
     def from_file(cls, file: Union[str, Path, BytesIO]):
-        return cls(_file_dict=read_file(file))
+        return cls(**read_file(file))
 
     def save(self, file: Union[str, Path, BytesIO]):
-        save_file(file, self.file_dict)
+        save_file(file, self)
 
     def show_code(self, with_imports: bool = True, with_subfunctions: bool = True, with_globals: bool = True):
         code = self.get_code_str(with_imports, with_subfunctions, with_globals)
@@ -69,10 +78,10 @@ class PltFile(object):
 
 
 def save_plt_file(file: Union[str, Path, BytesIO], func: FunctionType, *args, **kwargs) -> PltFile:
-    plt_file = PltFile(func, *args, **kwargs)
+    plt_file = PltFile.from_func(func, *args, **kwargs)
     plt_file.save(file)
     return plt_file
 
 
 def read_plt_file(file: Union[str, Path, BytesIO]) -> PltFile:
-    return PltFile(_file_dict=FuncDict(**read_file(file)))
+    return PltFile(**read_file(file))
