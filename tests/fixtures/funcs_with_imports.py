@@ -1,12 +1,16 @@
-import pytest
-
-from plt_pack.parse import FuncDict
 from inspect import getsource
 from typing import Tuple
+
 import matplotlib as mpl
 from matplotlib.patches import Rectangle
 from matplotlib.pyplot import show as plt_show
 from matplotlib import pyplot as plt
+
+from plt_pack.parse import FuncDict
+
+
+def func_with_dependency_in_args(cmap=plt.cm.jet):
+    print(cmap)
 
 
 def func_with_import1(args: Tuple[int, float] = (10, 1)):
@@ -69,6 +73,19 @@ FUNC_WITH_IMPORT2_DICT = FuncDict(
         'import matplotlib as mpl',
         'from matplotlib.patches import Rectangle',
         'from matplotlib.pyplot import show as plt_show',
+    ),
+    module_versions={},
+    global_vars={},
+)
+
+FUNC_WITH_DEPENDENCY_IN_ARGS = FuncDict(
+    entry_func='func_with_dependency_in_args',
+    functions={
+        'func_with_dependency_in_args': getsource(func_with_dependency_in_args),
+    },
+    modules=('matplotlib',),
+    import_lines=(
+        'import matplotlib.pyplot as plt',
     ),
     module_versions={},
     global_vars={},
