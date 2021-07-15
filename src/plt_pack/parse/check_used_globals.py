@@ -56,7 +56,12 @@ class CheckUsedGlobals(ast.NodeVisitor):
         self.generic_visit(node)
 
     def visit_Assign(self, node):
-        assigned = list(map(lambda x: x.id, node.targets))
+        assigned = []
+        for node in node.targets:
+            if isinstance(node, ast.Name):
+                assigned.append(node.id)
+            elif isinstance(node, ast.Tuple):
+                assigned += [n.id for n in node.elts]
         self.assigned_names.update(assigned)
         self.generic_visit(node)
 
