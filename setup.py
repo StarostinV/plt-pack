@@ -12,13 +12,22 @@ def get_version() -> str:
 
 __version__ = get_version()
 
-
 install_requires = [
     'numpy',
     'msgpack>=1.0.0',
     'msgpack-numpy>=0.4.7.1',
     'matplotlib',
     'packaging',
+]
+
+classifiers = [
+    'Development Status :: 3 - Alpha',
+    'Intended Audience :: Scientific community',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
 ]
 
 setup(
@@ -34,5 +43,6 @@ setup(
                 ' for exchanging scientific figures. Integrated with Jupyter Notebook.',
     license='MIT',
     python_requires='>=3.7.2',
-    install_requires=install_requires
+    install_requires=install_requires,
+    classifiers=classifiers,
 )
