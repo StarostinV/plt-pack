@@ -5,6 +5,7 @@ from pathlib import Path
 
 from ..jupyter_support import create_new_jupyter_cell, jupyter_code
 
+from ..parse import FuncDict
 from .save_read import save_file, read_file
 from .file_dict import get_file_dict
 
@@ -12,7 +13,8 @@ __all__ = ['PltFile', 'save_plt_file', 'read_plt_file']
 
 
 class PltFile(object):
-    def __init__(self, func: FunctionType = None, *args, _file_dict: dict = None, **kwargs):
+    def __init__(self, func: FunctionType = None, *args, _file_dict: FuncDict = None, **kwargs):
+        self.file_dict: FuncDict
         if _file_dict:
             self.file_dict = _file_dict
         else:
@@ -21,18 +23,18 @@ class PltFile(object):
     def get_code_str(self, with_imports: bool = True, with_subfunctions: bool = True, with_globals: bool = True):
         code = ''
 
-        entry_func_name = self.file_dict['entry_func']
-        entry_func = self.file_dict['functions'][entry_func_name]
-        sub_funcs = [func for func_name, func in self.file_dict['functions'].items()
+        entry_func_name = self.file_dict.entry_func
+        entry_func = self.file_dict.functions[entry_func_name]
+        sub_funcs = [func for func_name, func in self.file_dict.functions.items()
                      if func_name != entry_func_name]
 
         if with_imports:
-            import_lines = '\n'.join(self.file_dict['import_lines'])
+            import_lines = '\n'.join(self.file_dict.import_lines)
             code += import_lines
             code += '\n\n'
 
         if with_globals:
-            global_lines = '\n'.join([f'{k} = {v}' for k, v in self.file_dict['global_vars'].items()])
+            global_lines = '\n'.join([f'{k} = {v}' for k, v in self.file_dict.global_vars.items()])
             code += global_lines
             code += '\n\n'
 
@@ -73,4 +75,4 @@ def save_plt_file(file: Union[str, Path, BytesIO], func: FunctionType, *args, **
 
 
 def read_plt_file(file: Union[str, Path, BytesIO]) -> PltFile:
-    return PltFile(_file_dict=read_file(file))
+    return PltFile(_file_dict=FuncDict(**read_file(file)))

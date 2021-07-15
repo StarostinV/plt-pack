@@ -16,6 +16,7 @@ from typing import (
     Tuple,
 )
 
+from .func_dict import FuncDict
 from .check_used_globals import CheckUsedGlobals
 from .check_version import check_version
 from ..utils import is_serializable, find_non_serializable
@@ -23,7 +24,8 @@ from ..utils import is_serializable, find_non_serializable
 __all__ = ['FuncParser', 'parse_function']
 
 
-def parse_function(fun: FunctionType) -> dict:
+
+def parse_function(fun: FunctionType) -> FuncDict:
     return FuncParser().parse_func(fun)
 
 
@@ -38,7 +40,7 @@ class FuncParser(object):
         self.parsed_functions = {}
         self.module_versions = {}
         self.func_dict = {}
-        self.src_module = None
+        self.src_module: str = None
         self.entry_func: str = None
 
     def clear(self):
@@ -52,7 +54,7 @@ class FuncParser(object):
         self.src_module = None
         self.entry_func = None
 
-    def parse_func(self, fun: FunctionType) -> dict:
+    def parse_func(self, fun: FunctionType) -> FuncDict:
         if not isinstance(fun, FunctionType):
             raise TypeError(f'Only FunctionType objects supported, got {type(fun).__name__}.')
 
@@ -64,7 +66,7 @@ class FuncParser(object):
 
         self._parse_func(fun)
         self._update_module_versions(fun)
-        return self.to_serializable_dict()
+        return self.to_func_dict()
 
     def _parse_func(self, fun: FunctionType):
         if fun.__name__ in self.parsed_functions:
@@ -72,7 +74,7 @@ class FuncParser(object):
 
         self.check_globals.clear()
         fun_code = getsource(fun)
-        fun_code = fix_func_code(fun_code)
+        fun_code = _fix_func_code(fun_code)
         tree = ast.parse(fun_code)
         self.check_globals.visit(tree)
 
@@ -129,7 +131,7 @@ class FuncParser(object):
         if hasattr(var, '__module__'):
             module_name = var.__module__
             if module_name != self.src_module:
-                var_name = var.__name__
+                var_name = var.__name__ if hasattr(var, '__name__') else name
                 self.import_lines.add(_get_import_line(var_name, module_name, name))
                 self.used_modules.add(module_name.split('.')[0])
                 return True
@@ -150,20 +152,19 @@ class FuncParser(object):
         except AttributeError:
             self.log.warning(f'Failed getting a module name: {var}, use {assigned_name} instead.')
             module_name, assigned_name = assigned_name, None
-        # self.import_lines.add((module_name, assigned_name))
         self.import_lines.add(_get_import_line(module_name, assigned_name=assigned_name))
         self.used_modules.add(module_name.split('.')[0])
         return True
 
-    def to_serializable_dict(self) -> dict:
-        return {
-            'entry_func': self.entry_func,
-            'functions': self.parsed_functions,
-            'modules': tuple(self.used_modules),
-            'import_lines': tuple(self.import_lines),
-            'module_versions': dict(self.module_versions),
-            'global_vars': dict(self.global_vars),
-        }
+    def to_func_dict(self) -> FuncDict:
+        return FuncDict(
+            entry_func=self.entry_func,
+            functions=dict(self.parsed_functions),
+            modules=tuple(self.used_modules),
+            import_lines=tuple(self.import_lines),
+            module_versions=dict(self.module_versions),
+            global_vars=dict(self.global_vars),
+        )
 
 
 def _get_global_var_from_name(name, fun) -> Tuple[Any, bool]:
@@ -187,7 +188,7 @@ def _get_import_line(name: str, from_str: str = None, assigned_name: str = None)
     return line
 
 
-def fix_func_code(func_code: str):
+def _fix_func_code(func_code: str):
     func_code = _fix_indents(func_code, ' ')
     func_code = _fix_indents(func_code, '\t')
     func_code = _remove_decorators(func_code)
