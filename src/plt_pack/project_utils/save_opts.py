@@ -6,6 +6,14 @@ PLT_FORMAT: str = 'plt'
 
 # dataclasses are not available in python 3.6 =/
 class SaveOpts(object):
+    __slots__ = (
+        'name',
+        'rewrite',
+        'datefmt',
+        'save_figure',
+        'fig_format',
+        'save_plt',
+    )
 
     def __init__(self,
                  name: str = None,
