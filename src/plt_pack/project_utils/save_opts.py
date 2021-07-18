@@ -38,6 +38,7 @@ class SaveOpts(object):
             'datefmt': self.datefmt,
             'save_figure': self.save_figure,
             'fig_format': self.fig_format,
+            'save_plt': self.save_plt
         }
 
     @property
