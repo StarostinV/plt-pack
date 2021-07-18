@@ -13,6 +13,7 @@ class SaveOpts(object):
                  datefmt: str = '%d-%b-%H-%M-%S',
                  save_figure: bool = False,
                  fig_format: str = 'eps',
+                 save_plt: bool = True,
                  ):
 
         self.name = name
@@ -20,11 +21,7 @@ class SaveOpts(object):
         self.datefmt = datefmt
         self.save_figure = save_figure
         self.fig_format = fig_format
-
-    def new_opts(self, **kwargs):
-        opts_dict = self.asdict()
-        opts_dict.update(**kwargs)
-        return SaveOpts(**opts_dict)
+        self.save_plt = save_plt
 
     def asdict(self):
         return {
