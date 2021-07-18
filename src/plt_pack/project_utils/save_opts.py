@@ -1,8 +1,8 @@
 from types import FunctionType
 from typing import Tuple
 
-
 PLT_FORMAT: str = 'plt'
+
 
 # dataclasses are not available in python 3.6 =/
 class SaveOpts(object):
@@ -23,7 +23,6 @@ class SaveOpts(object):
                  fig_format: str = 'eps',
                  save_plt: bool = True,
                  ):
-
         self.name = name
         self.rewrite = rewrite
         self.datefmt = datefmt
