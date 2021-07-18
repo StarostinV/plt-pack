@@ -41,6 +41,11 @@ class SaveOpts(object):
             'save_plt': self.save_plt
         }
 
+    def new_opts(self, **kwargs):
+        opts_dict = self.asdict()
+        opts_dict.update(**kwargs)
+        return SaveOpts(**opts_dict)
+
     @property
     def time_str(self):
         return dt.now().strftime(self.datefmt)
