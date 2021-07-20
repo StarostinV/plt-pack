@@ -37,6 +37,8 @@ from .plt_project import (
     plt_project,
 )
 
+from .freeze_time import freeze_time
+
 
 @pytest.fixture(
     params=[
