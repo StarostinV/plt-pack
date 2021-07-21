@@ -1,5 +1,4 @@
 import ast
-from inspect import getsource
 import logging
 import importlib
 
@@ -19,6 +18,8 @@ from typing import (
 from .func_dict import FuncDict
 from .check_used_globals import CheckUsedGlobals
 from .check_version import check_version
+from .get_source_code import get_source_code
+
 from ..utils import is_serializable, find_non_serializable
 
 __all__ = ['FuncParser', 'parse_function']
@@ -73,8 +74,7 @@ class FuncParser(object):
             return
 
         self.check_globals.clear()
-        fun_code = getsource(fun)
-        fun_code = _fix_func_code(fun_code)
+        fun_code = get_source_code(fun)
         tree = ast.parse(fun_code)
         self.check_globals.visit(tree)
 
@@ -173,6 +173,9 @@ def _get_global_var_from_name(name, fun) -> Tuple[Any, bool]:
     except KeyError:
         if name in globals():
             var = globals()[name]
+        elif name in fun.__code__.co_freevars:
+            idx = fun.__code__.co_freevars.index(name)
+            var = fun.__closure__[idx].cell_contents
         else:
             return None, False
     return var, True
@@ -186,33 +189,3 @@ def _get_import_line(name: str, from_str: str = None, assigned_name: str = None)
     if assigned_name and assigned_name != name:
         line = f'{line} as {assigned_name}'
     return line
-
-
-def _fix_func_code(func_code: str):
-    func_code = _fix_indents(func_code, ' ')
-    func_code = _fix_indents(func_code, '\t')
-    func_code = _remove_decorators(func_code)
-
-    return func_code
-
-
-def _remove_decorators(func_code: str):
-    counts = 0
-    lines = func_code.split('\n')
-
-    for line in lines:
-        if line.startswith('def '):
-            break
-        counts += 1
-    return '\n'.join(lines[counts:])
-
-
-def _fix_indents(func_code: str, char: str):
-    counts: int = 0
-    lines = func_code.split('\n')
-
-    for ch in lines[0].split(char):
-        if ch:
-            break
-        counts += 1
-    return '\n'.join([line[counts:] for line in lines])

@@ -30,7 +30,8 @@ def func_with_import1(args: Tuple[int, float] = (10, 1)):
 
 
 def func_with_import2(n: int = 10, a: float = 1.):
-    from matplotlib.pyplot import plot, gca
+    from matplotlib.pyplot import plot
+    from matplotlib.pyplot import gca as my_gca
     import numpy as np
 
     def plot_rectangle(ax):
@@ -42,7 +43,7 @@ def func_with_import2(n: int = 10, a: float = 1.):
     y = np.sin(x * a)
 
     plot(x, y)
-    plot_rectangle(gca())
+    plot_rectangle(my_gca())
     func_with_import1((n, a))
     plt_show()
 

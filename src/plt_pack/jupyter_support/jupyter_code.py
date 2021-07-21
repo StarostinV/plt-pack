@@ -1,17 +1,10 @@
-try:
-    from IPython.display import Code
-except ImportError:
-    Code = None
-
 def jupyter_code(func_code: str):
-    global Code
-
-    if not Code:
-        try:
-            from IPython.display import Code
-        except ImportError:
-            raise ImportError('Could not import IPython.display.Code')
+    from IPython.display import Code
     return Code(func_code)
 
 
-__all__ = ['jupyter_code']
+def display_code(func_code: str):
+    from IPython.display import display
+    display(jupyter_code(func_code))
+
+__all__ = ['jupyter_code', 'display_code']
