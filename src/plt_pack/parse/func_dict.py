@@ -70,3 +70,7 @@ class FuncDict(dict):
     @property
     def diff_rc(self) -> Dict[str, Any]:
         return self.get('diff_rc', {})
+
+    @property
+    def description(self) -> str:
+        return self.get('description', '')
