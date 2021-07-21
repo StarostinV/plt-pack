@@ -1,5 +1,5 @@
 from types import FunctionType
-from typing import Tuple, Optional
+from typing import Tuple, Dict, Any, Optional
 import datetime
 
 from ..parse.parse_func_name import get_real_func_name
@@ -49,6 +49,10 @@ class SaveOpts(dict):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+    @property
+    def info_dict(self) -> Dict[str, Any]:
+        return {'description': self.description or ''}
 
     def new_opts(self, only_missing_keys: bool = False, **kwargs) -> 'SaveOpts':
         if only_missing_keys:
