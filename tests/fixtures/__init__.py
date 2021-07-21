@@ -80,6 +80,23 @@ def functions_with_func_dicts(request):
 
 @pytest.fixture(
     params=[
+        (func_with_import1, FUNC_WITH_IMPORT1_DICT),
+        (func_with_dependency_in_args, FUNC_WITH_DEPENDENCY_IN_ARGS),
+        (func_with_many_subfunctions, FUNC_WITH_MANY_SUBFUNCTIONS_DICT),
+    ],
+    ids=[
+        'func_with_import1',
+        'func_with_dependency_in_args',
+        'func_with_many_subfunctions',
+    ]
+)
+def functions_with_func_dicts_short(request):
+    func, func_dict = request.param
+    return func, func_dict
+
+
+@pytest.fixture(
+    params=[
         (FUNC_WITH_GLOBALS_DICT, FUNC_WITH_GLOBALS_CODE),
     ],
     ids=[

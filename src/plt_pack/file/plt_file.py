@@ -1,5 +1,5 @@
 from types import FunctionType
-from typing import Union, List
+from typing import Union, List, Dict, Any, Tuple, Optional
 from io import BytesIO
 from pathlib import Path
 
@@ -92,8 +92,16 @@ class PltFile(FuncDict):
         display_code(self.get_code_str())
 
 
-def save_plt_file(file: Union[str, Path, BytesIO], func: FunctionType, *args, **kwargs) -> PltFile:
+def save_plt_file(
+        file: Union[str, Path, BytesIO],
+        func: FunctionType,
+        args: Optional[Tuple[Any, ...]] = (),
+        kwargs: Optional[Dict[str, Any]] = None,
+        info_dict: Optional[Dict[str, Any]] = None,
+) -> PltFile:
     plt_file = PltFile.from_func(func, *args, **kwargs)
+    if info_dict:
+        plt_file.update(info_dict)
     plt_file.save(file)
     return plt_file
 
