@@ -2,7 +2,7 @@
 
 ## _Bind your matplotlib functions with data_
 
-[![Build Status](https://travis-ci.com/StarostinV/plt-pack.svg?branch=master)](https://travis-ci.com/StarostinV/plt-pack)
+[![Test](https://github.com/StarostinV/plt-pack/actions/workflows/run-tests.yaml/badge.svg)](https://github.com/StarostinV/plt-pack/)
 [![codecov](https://codecov.io/gh/StarostinV/plt-pack/branch/master/graph/badge.svg)](https://codecov.io/gh/StarostinV/plt-pack)
 
 [![PyPI version fury.io](https://badge.fury.io/py/plt-pack.svg)](https://pypi.python.org/pypi/plt-pack/)
