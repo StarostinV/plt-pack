@@ -61,7 +61,7 @@ class SaveOpts(dict):
         return opts_dict
 
     def __repr__(self):
-        args = ', '.join([f'{k}={v}' for k, v in self.items()])
+        args = ', '.join([f'{k}={repr(v)}' for k, v in self.items()])
         return f'SaveOpts({args})'
 
     @property
