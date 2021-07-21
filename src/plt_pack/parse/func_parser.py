@@ -173,6 +173,9 @@ def _get_global_var_from_name(name, fun) -> Tuple[Any, bool]:
     except KeyError:
         if name in globals():
             var = globals()[name]
+        elif name in fun.__code__.co_freevars:
+            idx = fun.__code__.co_freevars.index(name)
+            var = fun.__closure__[idx].cell_contents
         else:
             return None, False
     return var, True
