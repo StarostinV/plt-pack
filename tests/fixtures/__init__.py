@@ -14,6 +14,7 @@ from .funcs_with_globals import (
     FUNC_WITH_GLOBALS_DICT,
     func_with_stated_globals,
     FUNC_WITH_STATED_GLOBALS,
+    FUNC_WITH_GLOBALS_CODE,
 )
 
 from .func_with_many_subfunctions import (
@@ -75,3 +76,21 @@ from .func_args import func_args
 def functions_with_func_dicts(request):
     func, func_dict = request.param
     return func, func_dict
+
+
+@pytest.fixture(
+    params=[
+        (FUNC_WITH_GLOBALS_DICT, FUNC_WITH_GLOBALS_CODE),
+    ],
+    ids=[
+        'func_with_globals',
+    ]
+)
+def func_dicts_with_code(request):
+    func_dict, func_code = request.param
+    return func_dict, func_code
+
+
+@pytest.fixture
+def func_from_readme_code():
+    return FUNC_FROM_README_CODE
