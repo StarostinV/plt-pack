@@ -48,3 +48,21 @@ def test_description(plt_project, functions_with_func_dicts_short):
     file = plt_project.load_file('func_name')
 
     compare_func_dicts(func_dict, file, description='Some description')
+
+
+def test_register_sub_called(plt_project, freeze_time):
+    datefmt = '%H'
+
+    @plt_project.register
+    def func1():
+        pass
+
+    @plt_project.register
+    def func2():
+        func1()
+
+    with plt_project(rewrite=False, datefmt=datefmt):
+        func2()
+
+    assert len(plt_project.list_files()) == 1
+    assert plt_project.list_files()[0] == f'func2_{freeze_time.strftime(datefmt)}'
