@@ -3,7 +3,7 @@ from typing import Union, List
 from io import BytesIO
 from pathlib import Path
 
-from ..jupyter_support import create_new_jupyter_cell, jupyter_code
+from ..jupyter_support import create_new_jupyter_cell, display_code
 
 from ..parse import FuncDict
 from .save_read import save_file, read_file
@@ -74,7 +74,7 @@ class PltFile(FuncDict):
             return code
 
     def _ipython_display_(self):
-        return jupyter_code(self.get_code_str())
+        display_code(self.get_code_str())
 
 
 def save_plt_file(file: Union[str, Path, BytesIO], func: FunctionType, *args, **kwargs) -> PltFile:
