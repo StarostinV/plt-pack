@@ -18,7 +18,8 @@ def compare_func_dicts(
         target_dict: FuncDict,
         res_dict: FuncDict,
         target_args: tuple = None,
-        target_kwargs: dict = None
+        target_kwargs: dict = None,
+        description: str = None,
 ):
     assert target_dict.functions.keys() == res_dict.functions.keys()
     assert set(target_dict.import_lines) == set(res_dict.import_lines)
@@ -36,6 +37,8 @@ def compare_func_dicts(
         res_kwargs = {k: _to_list(v) for k, v in res_dict.kwargs.items()}
         target_kwargs = {k: _to_list(v) for k, v in target_kwargs.items()}
         assert res_kwargs == target_kwargs
+    if description is not None:
+        assert description == res_dict.description
 
 
 def _to_list(v):

@@ -100,7 +100,7 @@ class PltProject(object):
             _save_figure(func, self.folder / fig_name, args, kwargs)
 
         if save_opts.save_plt:
-            save_plt_file(plt_path, func, *args, **kwargs)
+            save_plt_file(plt_path, func, args=args, kwargs=kwargs, info_dict=save_opts.info_dict)
 
         return plt_path
 
