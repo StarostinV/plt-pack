@@ -41,6 +41,8 @@ from .plt_project import (
 
 from .freeze_time import freeze_time
 
+from .func_args import func_args
+
 
 @pytest.fixture(
     params=[
