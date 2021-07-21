@@ -3,7 +3,8 @@
 ## _Bind your matplotlib functions with data_
 
 [![Test](https://github.com/StarostinV/plt-pack/actions/workflows/run-tests.yaml/badge.svg)](https://github.com/StarostinV/plt-pack/)
-[![codecov](https://codecov.io/gh/StarostinV/plt-pack/branch/master/graph/badge.svg)](https://codecov.io/gh/StarostinV/plt-pack)
+
+[comment]: <> ([![codecov]&#40;https://codecov.io/gh/StarostinV/plt-pack/branch/master/graph/badge.svg&#41;]&#40;https://codecov.io/gh/StarostinV/plt-pack&#41;)
 
 [![PyPI version fury.io](https://badge.fury.io/py/plt-pack.svg)](https://pypi.python.org/pypi/plt-pack/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/plt-pack.svg)](https://pypi.python.org/pypi/plt-pack/)
