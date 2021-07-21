@@ -39,6 +39,10 @@ from .plt_project import (
     plt_project,
 )
 
+from .functions_from_readme import (
+    FUNC_FROM_README_CODE,
+)
+
 from .freeze_time import freeze_time
 
 from .func_args import func_args
