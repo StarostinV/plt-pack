@@ -12,6 +12,10 @@ lw = 2
 ls = '--'
 
 
+def func_with_stated_globals():
+    global COLOR, ls
+
+
 def func_with_globals():
     _plt_xy(y)
     plt.show()
@@ -20,6 +24,17 @@ def func_with_globals():
 def _plt_xy(y):
     plt.plot(x, y, c=COLOR, lw=lw, ls=ls)
 
+
+FUNC_WITH_STATED_GLOBALS: FuncDict = FuncDict(
+    entry_func='func_with_stated_globals',
+    functions={
+        'func_with_stated_globals': getsource(func_with_stated_globals),
+    },
+    modules=(),
+    import_lines=(),
+    module_versions={},
+    global_vars=dict(COLOR=COLOR, ls=ls),
+)
 
 FUNC_WITH_GLOBALS_DICT: FuncDict = FuncDict(
     entry_func='func_with_globals',
