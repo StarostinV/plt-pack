@@ -35,6 +35,7 @@ class PltProject(object):
 
         self.default_opts: SaveOpts = save_opts or SaveOpts(**save_opt_kwargs)
         self._context_opts: SaveOpts = SaveOpts()
+        self._register_lock = _Lock()
 
     @property
     def context_opts(self) -> Optional[SaveOpts]:
@@ -145,10 +146,31 @@ class PltProject(object):
         return self.load_file(name)
 
     def _register_called(self, func: FunctionType, args: List[Any], kwargs: Dict[str, Any]):
-        if not self._TEST:
-            func(*args, **kwargs)
-        if self._context_opts:
-            self.save(func, args, kwargs)
+        if self._register_lock:
+            if not self._TEST:
+                func(*args, **kwargs)
+            return
+        with self._register_lock():
+            if not self._TEST:
+                func(*args, **kwargs)
+            if self._context_opts:
+                self.save(func, args, kwargs)
+
+
+class _Lock(object):
+    def __init__(self):
+        self._locked = False
+
+    def __bool__(self):
+        return self._locked
+
+    @contextmanager
+    def __call__(self):
+        self._locked = True
+        try:
+            yield
+        finally:
+            self._locked = False
 
 
 def _save_figure(
